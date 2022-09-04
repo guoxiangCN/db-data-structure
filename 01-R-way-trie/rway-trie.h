@@ -2,8 +2,8 @@
 
 #include <memory>
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 #define NAMESPACE_BEGIN namespace my {
 #define NAMESPACE_END }
@@ -11,6 +11,7 @@
 NAMESPACE_BEGIN
 
 class RWayTrie {
+ public:
   struct Node;
   typedef std::shared_ptr<Node> NodeSPtr;
   typedef std::weak_ptr<Node> NodeWPtr;
@@ -25,7 +26,7 @@ class RWayTrie {
 
   void Add(const std::string& key, void* privData = nullptr);
   bool Remove(const std::string& key, void** pPrivData = nullptr);
-  std::vector<std::string> Keys() const;
+  std::vector<std::string> Keys(const std::string &prefix="") const;
   int Size() const;
 
  private:

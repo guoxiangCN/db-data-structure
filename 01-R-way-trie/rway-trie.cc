@@ -4,8 +4,8 @@
 
 #ifndef NODE_DEBUG_MSG
 #include <iostream>
-#define NODE_DEBUG_MSG                                             \
-  do {                                                             \
+#define NODE_DEBUG_MSG                                       \
+  do {                                                       \
     std::cout << "Node::~Node() val = " << val << std::endl; \
   } while (0)
 #endif
@@ -86,7 +86,7 @@ void RWayTrie::Add(const std::string& key, void* privData) {
     node->term_count++;
   }
   assert(node->val == key[key.length() - 1]);
-  if(!node->term){
+  if (!node->term) {
     size_++;
   }
   node->term = true;
@@ -129,10 +129,38 @@ bool RWayTrie::Remove(const std::string& key, void** pPrivData) {
   return found;
 }
 
+static void keysHelper(RWayTrie::NodeSPtr node, std::vector<std::string>& keys,
+                       std::string& prefix, int level) {
+  if (level != 0) {
+    prefix.push_back(node->val);
+  }
 
-std::vector<std::string> RWayTrie::Keys() const {
+  if (node->term) {
+    keys.push_back(prefix);
+  }
+
+  for (const auto& p : node->children) {
+    keysHelper(p.second, keys, prefix, level + 1);
+  }
+
+  if (level != 0) {
+    prefix.pop_back();
+  }
+}
+
+std::vector<std::string> RWayTrie::Keys(const std::string& prefix) const {
   std::vector<std::string> keys;
-  
+  std::string pre = prefix;
+  auto node = root_;
+  for (const auto& c : prefix) {
+    auto iter = node->children.find(c);
+    if (iter == node->children.cend()) {
+      return keys;
+    } else {
+      node = iter->second;
+    }
+  }
+  keysHelper(node, keys, pre, 0);
   return keys;
 }
 
