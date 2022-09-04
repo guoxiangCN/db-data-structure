@@ -1,12 +1,11 @@
 #pragma once
 
-#include <cassert>
 #include <memory>
-#include <mutex>
 #include <string>
+#include <vector>
 #include <unordered_map>
 
-#define NAMESPACE_BEGIN namespace gx {
+#define NAMESPACE_BEGIN namespace my {
 #define NAMESPACE_END }
 
 NAMESPACE_BEGIN
@@ -25,8 +24,8 @@ class RWayTrie {
   RWayTrie& operator=(const RWayTrie&) = delete;
 
   void Add(const std::string& key, void* privData = nullptr);
-  void Remove(const std::string& key);
-
+  bool Remove(const std::string& key, void** pPrivData = nullptr);
+  std::vector<std::string> Keys() const;
   int Size() const;
 
  private:
